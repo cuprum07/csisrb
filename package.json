@@ -1,0 +1,16 @@
+{
+  "name": "CSISRBBOT",
+  "version": "1.0.0",
+  "description": "CSI SRB BOT",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.14.1",
+    "botbuilder-azure": "^3.0.4",
+    "restify": "^7.0.0"
+  }
+}
