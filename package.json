@@ -12,6 +12,7 @@
     "botbuilder": "^3.14.1",
     "botbuilder-azure": "^3.1.0",
     "dotenv": "^5.0.1",
+    "mssql": "^4.1.0",
     "restify": "^7.0.0"
   }
 }
