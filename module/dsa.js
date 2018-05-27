@@ -28,19 +28,23 @@ module.exports = [
         //var msg = await func.imgToHtml(html,session);
         //var msg = 'msg';
         var renderStream = webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg);
-            var bufArr = [];
+        console.log('start renderStream');    
+        var bufArr = [];
             renderStream.on('data', function(data) {
+                console.log('data render'); 
                 bufArr.push(data);
             });
             renderStream.on('end', function() {
+                console.log('render end'); 
                 var buf = Buffer.concat(bufArr);
                 var base64 = Buffer.from(buf).toString('base64');
                 var contentType = 'image/png';
-                        var msg = new builder.Message(session)
+                var msg = new builder.Message(session)
                             .addAttachment({
                                 contentUrl: util.format('data:%s;base64,%s', contentType, base64),
                                 contentType: contentType
                             });  
+                            console.log(msg);             
                             session.send(msg);
                             session.endDialog();          
             });	
