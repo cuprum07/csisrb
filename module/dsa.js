@@ -28,7 +28,7 @@ module.exports = [
         //var msg = await func.imgToHtml(html,session);
         //var msg = 'msg';
         //var renderStream = webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg);
-        
+        html = '<h1>Hello world</h1>';
         webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg, function (err, renderStream) {
         console.log('start renderStream'); 
         console.log(renderStream);   
