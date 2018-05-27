@@ -8,7 +8,7 @@ var db = require('./module/db')
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
-   console.log('app', process.env.MicrosoftAppId); 
+   console.log('server', process.env.msSqlServer); 
 });
 
 // Create chat connector for communicating with the Bot Framework Service

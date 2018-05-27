@@ -13,6 +13,7 @@ var dbConfig = {
 
 module.exports = {
     executeQueryData: function(query){
+        console.log('db server', process.env.msSqlServer); 
         return new Promise (function(resolve,reject){
             var conn = new sql.ConnectionPool(dbConfig)
             conn.connect().then(function(pool){
