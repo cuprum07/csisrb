@@ -1,11 +1,11 @@
 var sql = require("mssql");
 //Initiallising connection string
 var dbConfig = {
-    user:  "csisrb",
-    password: "Dfrt45#tyuk",
-    server: "csisrb.database.windows.net",
-	database: "csi",
-    port: "1433",
+    user:  process.env.msSqlUser,
+    password: process.env.msSqlPassword,
+    server: process.env.msSqlServer,
+	database: process.env.msSqlDatabase,
+    port: process.env.msSqlPort,
     options: {
         encrypt: true // Use this if you're on Windows Azure
     }

@@ -35,8 +35,10 @@ server.post('/api/messages', connector.listen());
 var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
-    function(session){
-        session.send("Привет, это CSI бот Среднерусского банка.");
+    async function(session){
+        var query = "select * from test";
+        var result = await db.executeQueryData(query);
+        session.send("Привет, это CSI бот Среднерусского банка."+JSON.stringify(result));
         session.beginDialog("main");
     }
 ]).set('storage', inMemoryStorage); // Register in memory storage

@@ -35,6 +35,7 @@ module.exports = {
     },
     imgToHtml: function(html,session){
         return new Promise (function(resolve,reject){
+            console.log('start webshot');
             var renderStream = webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg);
             var bufArr = [];
             renderStream.on('data', function(data) {
