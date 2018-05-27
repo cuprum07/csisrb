@@ -8,8 +8,8 @@
   },
   "author": "",
   "license": "ISC",
-  "engines":{
-    "node":"8.9.3"
+  "engines": {
+    "node": "8.9.3"
   },
   "dependencies": {
     "botbuilder": "^3.14.1",
@@ -18,6 +18,7 @@
     "fs": "0.0.1-security",
     "mssql": "^4.1.0",
     "node-webshot": "^1.0.2",
+    "phantomjs-prebuilt": "^2.1.16",
     "restify": "^7.0.0",
     "util": "^0.10.3"
   }
