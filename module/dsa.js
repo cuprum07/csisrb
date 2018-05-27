@@ -34,6 +34,7 @@ module.exports = [
                 console.log('data render'); 
                 bufArr.push(data);
             });
+            console.log(bufArr);
             renderStream.on('end', function() {
                 console.log('render end'); 
                 var buf = Buffer.concat(bufArr);
