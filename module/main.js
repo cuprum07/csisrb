@@ -1,5 +1,6 @@
 var builder = require('botbuilder');
-var db = require('./db')
+var db = require('./db');
+
 
 var DialogLabels = {
     what_csi: 'Что такое CSI?',

@@ -1,6 +1,8 @@
 var builder = require('botbuilder');
 var db = require('./db');
 var func = require('./func');
+var webshot = require('node-webshot');
+var util = require('util');
 
 module.exports = [
     //async function (session) {
@@ -10,9 +12,26 @@ module.exports = [
         
         session.sendTyping();
         //var msg = await func.imgToHtml(html,session);
-        var msg = 'msg';
-        session.send(msg);
-        session.endDialog();
+        //var msg = 'msg';
+        var renderStream = webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg);
+            var bufArr = [];
+            renderStream.on('data', function(data) {
+                bufArr.push(data);
+            });
+            renderStream.on('end', function() {
+                var buf = Buffer.concat(bufArr);
+                var base64 = Buffer.from(buf).toString('base64');
+                var contentType = 'image/png';
+                        var msg = new builder.Message(session)
+                            .addAttachment({
+                                contentUrl: util.format('data:%s;base64,%s', contentType, base64),
+                                contentType: contentType
+                            });  
+                            session.send(msg);
+                            session.endDialog();          
+            });	
+        //session.send(msg);
+        //session.endDialog();
 
         /*var customMessage = new builder.Message(session)
             .text("**Диалог DSA** *text italic*")
