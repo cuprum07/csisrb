@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "ISC",
+  "engines":{
+    "node":"8.9.3"
+  },
   "dependencies": {
     "botbuilder": "^3.14.1",
     "botbuilder-azure": "^3.1.0",
