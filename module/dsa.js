@@ -4,6 +4,20 @@ var func = require('./func');
 var webshot = require('node-webshot');
 var util = require('util');
 
+var optionsImg = {
+    screenSize: {
+      width: 320,
+      height: 480
+    },
+    shotSize: {
+      width: 'all',
+     height: 'all'
+    },
+    siteType:'html',
+    userAgent: 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_2 like Mac OS X; en-us)'
+      + ' AppleWebKit/531.21.20 (KHTML, like Gecko) Mobile/7B298g'
+  };
+
 module.exports = [
     //async function (session) {
     function (session) {
