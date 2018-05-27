@@ -12,7 +12,10 @@
     "botbuilder": "^3.14.1",
     "botbuilder-azure": "^3.1.0",
     "dotenv": "^5.0.1",
+    "fs": "0.0.1-security",
     "mssql": "^4.1.0",
-    "restify": "^7.0.0"
+    "node-webshot": "^1.0.2",
+    "restify": "^7.0.0",
+    "util": "^0.10.3"
   }
 }
