@@ -17,7 +17,7 @@ module.exports = {
         return new Promise (function(resolve,reject){
             var client = new grabzit(process.env.grabzitKey, process.env.grabzitSecret);
             
-            var imgName = 'res'+(Math.floor(Math.random() * 9999999) + 1)+'.png';
+            var imgName = 'res'+(Math.floor(Math.random() * 9999999) + 1)+'.jpg';
             var pathImg = "img/"+imgName;
 
             client.html_to_image('<html><style>body {font-family: arial;}table {border-collapse: collapse;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>',optionsImg); 
@@ -47,7 +47,7 @@ module.exports = {
                             return session.send('Ошибка при чтении картинки '+err);
                         }
                         var base64 = Buffer.from(data).toString('base64');
-                        var contentType = 'image/png';
+                        var contentType = 'image/jpeg';
                         var msg = new builder.Message(session)
                             .text("Рейтинг ГОСБ")
                             .addAttachment({
