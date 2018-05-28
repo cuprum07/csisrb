@@ -15,8 +15,10 @@ var optionsImg = {
 module.exports = {
     imgToHtml: function(html,session){
         return new Promise (function(resolve,reject){
-            var client = new grabzit("MDRmZTMyYWQyMzAwNDA1NDkwZjA3MTc1ZjA5OGE1ODA=", "Pwk/P3U/cz8/Pz8pPz94PxYYUD9sPwg8Pz8/VF9ufz8=");
-            var pathImg = "img/result1.png";
+            var client = new grabzit(process.env.grabzitKey, process.env.grabzitSecret);
+            
+            var imgName = 'res'+(Math.floor(Math.random() * 9999999) + 1)+'.png';
+            var pathImg = "img/"+imgName;
 
             client.html_to_image('<html><style>body {font-family: arial;}table {border-collapse: collapse;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>',optionsImg); 
 
@@ -26,6 +28,19 @@ module.exports = {
                     return session.send('Ошибка при конвертировании в картинку '+error);
                 }
                 else {
+                    var card = new builder.HeroCard(session)
+                        .title('Рейтинг ГОСБов')
+                        .subtitle('')
+                        .text('')
+                        .images([
+                            builder.CardImage.create(session, process.env.pathStaticImg+imgName)
+                        ])
+                        /*.buttons([
+                            builder.CardAction.openUrl(session, 'https://docs.microsoft.com/bot-framework', 'Get Started')
+                        ]);*/
+                        var msg = new builder.Message(session).addAttachment(card);
+                        resolve(msg);     
+                    /*
                     fs.readFile(pathImg, function (err, data) {
                         if (err) {
                             return session.send('Ошибка при чтении картинки '+err);
@@ -38,7 +53,7 @@ module.exports = {
                                 contentType: contentType
                             });
                         resolve(msg);     
-                    });
+                    });*/
                 }
             }); 		
         })

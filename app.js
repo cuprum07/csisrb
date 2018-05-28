@@ -6,10 +6,16 @@ var db = require('./module/db')
 
 // Setup Restify Server
 var server = restify.createServer();
+
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
    console.log('server', process.env.msSqlServer); 
 });
+
+server.get('/img/*', restify.plugins.serveStatic({
+    directory: __dirname,
+    default: 'index.html'
+  }));
 
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
