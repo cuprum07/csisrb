@@ -28,20 +28,21 @@ module.exports = {
                     return session.send('Ошибка при конвертировании в картинку '+error);
                 }
                 else {
-                    /*var card = new builder.HeroCard(session)
+                    var card = new builder.HeroCard(session)
                         .title('Рейтинг ГОСБов')
-                        .subtitle('')
-                        .text('')
+                        .subtitle('subtitle fdfdfdf')
+                        .text('text text text')
                         .images([
                             builder.CardImage.create(session, process.env.pathStaticImg+imgName)
                         ])
                         //.buttons([
                         //    builder.CardAction.openUrl(session, 'https://docs.microsoft.com/bot-framework', 'Get Started')
                         //]);
+                        console.log(process.env.pathStaticImg+imgName);
                         var msg = new builder.Message(session).addAttachment(card);
                         resolve(msg);  
-                    */       
-                    fs.readFile(pathImg, function (err, data) {
+                         
+                    /*fs.readFile(pathImg, function (err, data) {
                         if (err) {
                             return session.send('Ошибка при чтении картинки '+err);
                         }
@@ -54,7 +55,7 @@ module.exports = {
                                 contentType: contentType
                             });
                         resolve(msg);     
-                    });
+                    });*/
                 }
             }); 		
         })
