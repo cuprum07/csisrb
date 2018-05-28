@@ -1,6 +1,6 @@
 webshot('<html><body>Hello, World!</body></html>', optionsImg, function (err, renderStream) {
     console.log('start renderStream'); //printed  
-    
+    console.log(err); //null
     var bufArr = [];
     renderStream.on('data', function(data) {
         console.log('data render'); //Not printed in console Azure
