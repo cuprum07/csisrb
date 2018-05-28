@@ -31,6 +31,7 @@ module.exports = [
         html = '<h1>Hello world</h1>';
         webshot('<html><style>body {font-family: arial;}table {border-collapse: collapse; background-color: #fff;} td {border: 1px solid #000;padding: 3px}</style><body>'+html+'</body></html>', optionsImg, function (err, renderStream) {
         console.log('start renderStream'); 
+        console.log(err); 
         console.log(renderStream);   
         var bufArr = [];
             renderStream.on('data', function(data) {
