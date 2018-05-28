@@ -5,8 +5,10 @@ var util = require('util');
 var grabzit = require('grabzit');
 
 var optionsImg = {
-    "browserWidth":640, 
+    "browserWidth":1024, 
     "browserHeight":-1,
+    "width":-1, 
+    "height":-1,
     "format":"png"
 };
 
