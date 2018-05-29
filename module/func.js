@@ -14,10 +14,12 @@ var optionsImg = {
 
 var style = "<style>"+
     "body {font-family: arial;}"+
-    "table {border-collapse: collapse; width: 100%;}"+
-    "td {border: 1px solid #000; padding: 3px; text-align: center;}"+
+    "table {width: 100%;border-collapse:separate; border:solid black 1px; border-radius:6px;-moz-border-radius:6px;}"+
+    "td, th {border-left:solid black 1px; border-top:solid black 1px; padding: 6px 3px; text-align: center;}"+
+    "th {background-color: blue; font-weight: bold;}"+
+    "th:first-child {border-top: none;}"+
+    "td:first-child, th:first-child {border-left: none;}"+
     ".align-left {text-align: left;}"+
-    "thead td {wont-weight: bold;}"+
 "</style>"
 
 module.exports = {
@@ -109,14 +111,14 @@ module.exports = {
 
         console.log(header_dat);
         console.log(gosb);
-        var html = '<table><thead><tr><td rowspan="2">Место</td><td rowspan="2">ГОСБ</td>';
+        var html = '<table><thead><tr><th rowspan="2">Место</th><th rowspan="2">ГОСБ</th>';
 
         for (var i in header_dat) {
-            html+='<td colspan="2">'+header_dat[i]+'</td>'
+            html+='<th colspan="2">'+header_dat[i]+'</th>'
         }
         html+='</tr><tr>';
         for (var i in header_dat) {
-            html+='<td>Количество</td><td>CSI</td>';
+            html+='<th>Кол-во оценок</th><th>CSI</th>';
         }
         html+='</tr>';
         for (var i in gosb) {
