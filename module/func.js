@@ -15,9 +15,9 @@ var optionsImg = {
 
 var style = "<style>"+
     "body {font-family: arial;}"+
-    "table {width: 100%;border-collapse:separate; border:solid black 1px; border-radius:6px;-moz-border-radius:6px;}"+
-    "td, th {border-left:solid black 1px; border-top:solid black 1px; padding: 6px 3px; text-align: center;}"+
-    "th {background-color: blue;}"+
+    "table {width: 100%;border-collapse:separator; border:solid black 1px; border-radius:15px;-moz-border-radius:15px;}"+
+    "td, th {border-left:solid black 1px; border-top:solid black 1px; border-bottom:none; border-right:none; padding: 10px 3px; text-align: center;}"+
+    "th {background-color: #4682B4; color: #fff; font-weight: normal;}"+
     "th:first-child {border-top: none;}"+
     "td:first-child, th:first-child {border-left: none;}"+
     ".align-left {text-align: left;}"+
