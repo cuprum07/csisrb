@@ -42,6 +42,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
     async function(session){
+        console.log(session)
         var query = "select * from test";
         var result = await db.executeQueryData(query);
         session.send("Привет, это CSI бот Среднерусского банка."+JSON.stringify(result));
