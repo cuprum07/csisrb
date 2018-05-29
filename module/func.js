@@ -28,7 +28,7 @@ module.exports = {
                     return session.send('Ошибка при конвертировании в картинку '+error);
                 }
                 else {
-                    var card = new builder.HeroCard(session)
+                    /*var card = new builder.HeroCard(session)
                         .title('Рейтинг ГОСБов')
                         .subtitle('subtitle fdfdfdf')
                         .text('text text text')
@@ -40,22 +40,22 @@ module.exports = {
                         //]);
                         console.log(process.env.pathStaticImg+imgName);
                         var msg = new builder.Message(session).addAttachment(card);
-                        resolve(msg);  
+                    resolve(msg);*/  
                          
-                    /*fs.readFile(pathImg, function (err, data) {
+                    fs.readFile(pathImg, function (err, data) {
                         if (err) {
                             return session.send('Ошибка при чтении картинки '+err);
                         }
                         var base64 = Buffer.from(data).toString('base64');
                         var contentType = 'image/png';
                         var msg = new builder.Message(session)
-                            .text("Рейтинг ГОСБ")
+                            .text("")
                             .addAttachment({
                                 contentUrl: util.format('data:%s;base64,%s', contentType, base64),
                                 contentType: contentType
                             });
                         resolve(msg);     
-                    });*/
+                    });
                 }
             }); 		
         })
