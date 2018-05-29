@@ -13,7 +13,7 @@ var optionsImg = {
 };
 
 module.exports = {
-    imgToHtml: function(html,session){
+    imgToHtml: function(html,session,text){
         return new Promise (function(resolve,reject){
             var client = new grabzit(process.env.grabzitKey, process.env.grabzitSecret);
             
@@ -28,34 +28,36 @@ module.exports = {
                     return session.send('Ошибка при конвертировании в картинку '+error);
                 }
                 else {
-                    /*var card = new builder.HeroCard(session)
-                        .title('Рейтинг ГОСБов')
-                        .subtitle('subtitle fdfdfdf')
-                        .text('text text text')
-                        .images([
-                            builder.CardImage.create(session, process.env.pathStaticImg+imgName)
-                        ])
+                    if (session.message.source=='msteams') {
+                        fs.readFile(pathImg, function (err, data) {
+                            if (err) {
+                                return session.send('Ошибка при чтении картинки '+err);
+                            }
+                            var base64 = Buffer.from(data).toString('base64');
+                            var contentType = 'image/png';
+                            var msg = new builder.Message(session)
+                                .text(text)
+                                .addAttachment({
+                                    contentUrl: util.format('data:%s;base64,%s', contentType, base64),
+                                    contentType: contentType
+                                });
+                            resolve(msg);     
+                        });
+                    }
+                    else {
+                        var card = new builder.HeroCard(session)
+                            .title(text)
+                            /*.subtitle('subtitle fdfdfdf')
+                            .text('text text text')*/
+                            .images([
+                                builder.CardImage.create(session, process.env.pathStaticImg+imgName)
+                            ])
                         //.buttons([
                         //    builder.CardAction.openUrl(session, 'https://docs.microsoft.com/bot-framework', 'Get Started')
                         //]);
-                        console.log(process.env.pathStaticImg+imgName);
                         var msg = new builder.Message(session).addAttachment(card);
-                    resolve(msg);*/  
-                         
-                    fs.readFile(pathImg, function (err, data) {
-                        if (err) {
-                            return session.send('Ошибка при чтении картинки '+err);
-                        }
-                        var base64 = Buffer.from(data).toString('base64');
-                        var contentType = 'image/png';
-                        var msg = new builder.Message(session)
-                            .text("")
-                            .addAttachment({
-                                contentUrl: util.format('data:%s;base64,%s', contentType, base64),
-                                contentType: contentType
-                            });
-                        resolve(msg);     
-                    });
+                        resolve(msg);
+                    }                         
                 }
             }); 		
         })
