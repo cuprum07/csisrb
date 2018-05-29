@@ -3,6 +3,7 @@ var db = require('./db');
 var fs = require('fs');
 var util = require('util');
 var grabzit = require('grabzit');
+var pdfcrowd = require("pdfcrowd");
 
 var optionsImg = {
     "browserWidth":840, 
@@ -23,7 +24,7 @@ var style = "<style>"+
 "</style>"
 
 module.exports = {
-    imgToHtml: function(html,session,text){
+    imgToHtmlGrabzit: function(html,session,text){
         return new Promise (function(resolve,reject){
             var client = new grabzit(process.env.grabzitKey, process.env.grabzitSecret);
             
@@ -70,6 +71,64 @@ module.exports = {
                     }                         
                 }
             }); 		
+        })
+    },
+    imgToHtml: function(html,session,text){
+        return new Promise (function(resolve,reject){
+            var client = new pdfcrowd.HtmlToImageClient(process.env.pdfcrowdLogin, process.env.pdfcrowdKey);
+            
+            var imgName = 'res'+(Math.floor(Math.random() * 9999999) + 1)+'.png';
+            var pathImg = "img/"+imgName;
+
+            // configure the conversion
+            try {
+                client.setOutputFormat("png");
+            } catch(why) {
+                console.error("Pdfcrowd Error: " + why);
+                console.error("Pdfcrowd Error Code: " + why.getCode());
+                console.error("Pdfcrowd Error Message: " + why.getMessage());
+                process.exit(1);
+            }
+
+            // run the conversion and write the result to a file
+            client.convertStringToFile(
+                '<html>'+style+'<body>'+html+'</body></html>',
+                pathImg,
+                function(err, fileName) {
+                    if (err) return session.send('Ошибка при конвертировании в картинку '+error);
+                    
+                    console.log("Success: the file was created " + fileName);
+                    if (session.message.source=='msteams') {
+                        fs.readFile(pathImg, function (err, data) {
+                            if (err) {
+                                return session.send('Ошибка при чтении картинки '+err);
+                            }
+                            var base64 = Buffer.from(data).toString('base64');
+                            var contentType = 'image/png';
+                            var msg = new builder.Message(session)
+                                .text(text)
+                                .addAttachment({
+                                    contentUrl: util.format('data:%s;base64,%s', contentType, base64),
+                                    contentType: contentType
+                                });
+                            resolve(msg);     
+                        });
+                    }
+                    else {
+                        var card = new builder.HeroCard(session)
+                            .title(text)
+                            /*.subtitle('subtitle fdfdfdf')
+                            .text('text text text')*/
+                            .images([
+                                builder.CardImage.create(session, process.env.pathStaticImg+imgName)
+                            ])
+                        //.buttons([
+                        //    builder.CardAction.openUrl(session, 'https://docs.microsoft.com/bot-framework', 'Get Started')
+                        //]);
+                        var msg = new builder.Message(session).addAttachment(card);
+                        resolve(msg);
+                    }        
+            });	
         })
     },
     vsp_gosb_rating: async function(){
