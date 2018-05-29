@@ -45,16 +45,18 @@ var bot = new builder.UniversalBot(connector, [
         console.log(session)
         var query = "select * from test";
         var result = await db.executeQueryData(query);
-        session.send("Привет, это CSI бот Среднерусского банка."+JSON.stringify(result));
+        //JSON.stringify(result)
+        session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");
     }
 ]).set('storage', inMemoryStorage); // Register in memory storage
 
 bot.dialog('main', require('./module/main'));
-bot.dialog('what_csi', require('./module/what_csi'));
-bot.dialog('appeal', require('./module/appeal'));
-bot.dialog('csi', require('./module/csi'));
+bot.dialog('vsp', require('./module/vsp'));
+bot.dialog('premier', require('./module/premier'));
+bot.dialog('sm', require('./module/sm'));
 bot.dialog('dsa', require('./module/dsa'));
+bot.dialog('appeal', require('./module/appeal'));
 
 // log any bot errors into the console
 
