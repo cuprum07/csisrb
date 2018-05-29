@@ -6,7 +6,7 @@ var grabzit = require('grabzit');
 var pdfcrowd = require("pdfcrowd");
 
 var optionsImg = {
-    "browserWidth":840, 
+    "browserWidth":1024, 
     "browserHeight":-1,
     /*"width":-1, 
     "height":-1,*/
@@ -24,7 +24,7 @@ var style = "<style>"+
 "</style>"
 
 module.exports = {
-    imgToHtmlGrabzit: function(html,session,text){
+    imgToHtml: function(html,session,text){
         return new Promise (function(resolve,reject){
             var client = new grabzit(process.env.grabzitKey, process.env.grabzitSecret);
             
@@ -73,7 +73,7 @@ module.exports = {
             }); 		
         })
     },
-    imgToHtml: function(html,session,text){
+    imgToHtmlPdf: function(html,session,text){
         return new Promise (function(resolve,reject){
             var client = new pdfcrowd.HtmlToImageClient(process.env.pdfcrowdLogin, process.env.pdfcrowdKey);
             
