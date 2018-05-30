@@ -46,15 +46,20 @@ var bot = new builder.UniversalBot(connector, [
         var query = "select * from test";
         var result = await db.executeQueryData(query);
 
-        savedAddress = { 
+        /*savedAddress = { 
           id: '7GFNVv1ArAQ',
           channelId: 'telegram',
           user: [Object],
           conversation: [Object],
           bot: [Object],
           serviceUrl: 'https://telegram.botframework.com' 
-        };
-        sendProactiveMessage(savedAddress);
+        };*/
+
+        savedAddress = session.message.address;
+        setTimeout(() => {
+            sendProactiveMessage(savedAddress);
+        }, 5000);
+        
         //JSON.stringify(result)
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");
@@ -96,7 +101,7 @@ bot.on('error', function (e) {
 });
 
 function sendProactiveMessage(address) {
-    console.log('adress '+address)
+    console.log('adress '+JSON.stringify(address))
     var msg = new builder.Message().address(address);
     msg.text('Это оповещение');
     msg.textLocale('ru-RU');
