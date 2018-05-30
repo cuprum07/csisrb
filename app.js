@@ -45,6 +45,9 @@ var bot = new builder.UniversalBot(connector, [
         console.log(session)
         var query = "select * from test";
         var result = await db.executeQueryData(query);
+
+        //savedAddress = session.message.address;
+        sendProactiveMessage('7GFNVv1ArAQ');
         //JSON.stringify(result)
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");
@@ -84,3 +87,10 @@ bot.dialog('vsp_rgo', [
 bot.on('error', function (e) {
     console.log('And error ocurred', e);
 });
+
+function sendProactiveMessage(address) {
+    var msg = new builder.Message().address(address);
+    msg.text('Это оповещение');
+    msg.textLocale('ru-RU');
+    bot.send(msg);
+}
