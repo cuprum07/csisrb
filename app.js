@@ -89,6 +89,7 @@ bot.on('error', function (e) {
 });
 
 function sendProactiveMessage(address) {
+    console.log('adress '+address)
     var msg = new builder.Message().address(address);
     msg.text('Это оповещение');
     msg.textLocale('ru-RU');
