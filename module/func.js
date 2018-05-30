@@ -162,6 +162,24 @@ module.exports = {
         return result;
         //JSON.stringify(result)
     },    
+    user_info: async function(address) {
+        var query="select * from users where addr='"+JSON.stringify(address)+"'";
+        console.log(query);
+        var result = await db.executeQueryData(query);
+        return result;
+    },
+    update_user: async function (address) {
+        var result = await this.user_info(address);
+        var query = '';
+        if (result.length) {
+            var query = "update users set dat=GETDATE() where id='"+result[0].id+"'";
+        }
+        else {
+            var query = "insert into users (addr, dat) VALUES ('"+JSON.stringify(address)+"',GETDATE())";
+        }
+        console.log(query);
+        db.executeQueryData(query);
+    },
     data_to_html: function(data){
         var header_dat=[];
         var gosb=[];

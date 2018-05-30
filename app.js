@@ -3,6 +3,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
 var db = require('./module/db')
+var func = require('./module/func');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -43,9 +44,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 var bot = new builder.UniversalBot(connector, [
     async function(session){
         console.log(session)
-        var query = "select * from test";
-        var result = await db.executeQueryData(query);
-
+        func.update_user(session.message.address);
         /*savedAddress = { 
           id: '7GFNVv1ArAQ',
           channelId: 'telegram',
@@ -76,6 +75,7 @@ bot.dialog('appeal', require('./module/appeal'));
 
 bot.dialog('vsp_vsp', [
     function (session) {
+        
         session.send('Динамика ВСП');
         return session.endDialog();
     },
