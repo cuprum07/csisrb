@@ -46,8 +46,15 @@ var bot = new builder.UniversalBot(connector, [
         var query = "select * from test";
         var result = await db.executeQueryData(query);
 
-        //savedAddress = session.message.address;
-        sendProactiveMessage('7GFNVv1ArAQ');
+        savedAddress = { 
+          id: '7GFNVv1ArAQ',
+          channelId: 'telegram',
+          user: [Object],
+          conversation: [Object],
+          bot: [Object],
+          serviceUrl: 'https://telegram.botframework.com' 
+        };
+        sendProactiveMessage(savedAddress);
         //JSON.stringify(result)
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");
