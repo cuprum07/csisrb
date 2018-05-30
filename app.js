@@ -58,6 +58,27 @@ bot.dialog('sm', require('./module/sm'));
 bot.dialog('dsa', require('./module/dsa'));
 bot.dialog('appeal', require('./module/appeal'));
 
+
+bot.dialog('vsp_vsp', [
+    function (session) {
+        session.send('Динамика ВСП');
+        return session.endDialog();
+    },
+    /*function (session, results) {
+        session.endDialog(`Hello ${results.response}!`);
+    }*/
+]);
+
+bot.dialog('vsp_rgo', [
+    function (session) {
+        session.send('Рейтинг РГВСП');
+        return session.endDialog();
+    },
+    /*function (session, results) {
+        session.endDialog(`Hello ${results.response}!`);
+    }*/
+]);
+
 // log any bot errors into the console
 
 bot.on('error', function (e) {

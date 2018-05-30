@@ -21,6 +21,8 @@ var style = "<style>"+
     "th:first-child {border-top: none;}"+
     "td:first-child, th:first-child {border-left: none;}"+
     ".align-left {text-align: left;}"+
+    ".green {color: green;}"+
+    ".red {color: red;}"+
 "</style>"
 
 module.exports = {
@@ -153,6 +155,7 @@ module.exports = {
                 "ROUND(AVG ([Оценка1]),3) as sr "+
             "FROM [dbo].[VSP] "+
                 "where [Date_create] in (select top 3 [Date_create] from [dbo].[VSP] group by [Date_create] order by [Date_create] desc) "+
+                "and [ГОСБ3]!=N'НЕ ОПРЕДЕЛЕНО' "+
                 "group by [ГОСБ3],[Date_create] "+
                 "order by [Date_create] desc, sr desc";
         var result = await db.executeQueryData(query);
@@ -167,13 +170,17 @@ module.exports = {
             if (!gosb.includes(data[i].gosb)) gosb.push(data[i].gosb);
         }
         header_dat=header_dat.reverse();
-
+        var kol_dat = header_dat.length;
         console.log(header_dat);
         console.log(gosb);
         var html = '<table><thead><tr><th rowspan="2">Место</th><th rowspan="2">ГОСБ</th>';
 
         for (var i in header_dat) {
             html+='<th colspan="2">'+header_dat[i]+'</th>'
+        }
+
+        if(kol_dat>1){
+            html+='<th rowspan="2">Динамика</th>';
         }
         html+='</tr><tr>';
         for (var i in header_dat) {
@@ -186,6 +193,9 @@ module.exports = {
                 //html+='<td></td><td></td>';
                 html+='<td>'+this.find_value(data,gosb[i],header_dat[j],'kolvo')+'</td>';
                 html+='<td>'+this.find_value(data,gosb[i],header_dat[j],'sr')+'</td>';
+            }
+            if(kol_dat>1){
+                html+='<td>'+this.dynamic(data,gosb[i],header_dat[kol_dat-1],header_dat[kol_dat-2])+'</td>';
             }
             html+='</tr>';
         }
@@ -202,5 +212,23 @@ module.exports = {
             }
         }
         return value;
+    },
+    dynamic: function(data,gosb,dat_new,dat_old){
+        var sr_new = 0;
+        var sr_old = 0;
+        var dynamic = 0;
+        var clas="green";
+        for (var i in data) {
+            if ((data[i].gosb==gosb)&&(data[i].dat==dat_new)) {
+                sr_new=data[i].sr;
+            }
+            if ((data[i].gosb==gosb)&&(data[i].dat==dat_old)) {
+                sr_old=data[i].sr;
+            }
+        }
+        dynamic = sr_new - sr_old;
+        dynamic = dynamic.toFixed(3);
+        if(dynamic<0) clas="red";
+        return '<span class="'+clas+'">'+dynamic+'</span>';
     }
 }
