@@ -43,8 +43,19 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
     async function(session){
-        console.log(session)
+        //console.log(session)
         func.update_user(session.message.address);
+
+        console.log(session.message.text);
+        if (session.message.text=='update') {
+            var user = await func.user_info(session.message.address);
+            console.log(user);
+            if ((user.length)&&(user[0].admin=='1')) {
+                var address = await func.user_addres();
+                console.log(address);
+                sendProactiveMessage(address,'CSI обновился!');
+            }
+        }
         /*savedAddress = { 
           id: '7GFNVv1ArAQ',
           channelId: 'telegram',
@@ -52,13 +63,14 @@ var bot = new builder.UniversalBot(connector, [
           conversation: [Object],
           bot: [Object],
           serviceUrl: 'https://telegram.botframework.com' 
-        };*/
+        };
 
         savedAddress = session.message.address;
         setTimeout(() => {
             sendProactiveMessage(savedAddress);
         }, 5000);
-        
+        */
+
         //JSON.stringify(result)
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");
@@ -100,10 +112,14 @@ bot.on('error', function (e) {
     console.log('And error ocurred', e);
 });
 
-function sendProactiveMessage(address) {
-    console.log('adress '+JSON.stringify(address))
-    var msg = new builder.Message().address(address);
-    msg.text('Это оповещение');
-    msg.textLocale('ru-RU');
-    bot.send(msg);
+function sendProactiveMessage(address,text) {
+    //console.log('adress '+JSON.stringify(address))
+    for (var i in address) {
+        console.log('adress '+address)
+        var addr = JSON.parse(address[i]);
+        var msg = new builder.Message().address(addr);
+        msg.text(text);
+        msg.textLocale('ru-RU');
+        bot.send(msg);
+    }
 }

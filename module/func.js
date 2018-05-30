@@ -164,7 +164,6 @@ module.exports = {
     },    
     user_info: async function(address) {
         var query="select * from users where channel='"+address.channelId+"' and user_id=N'"+address.user.id+"'";
-        console.log(query);
         var result = await db.executeQueryData(query);
         return result;
     },
@@ -177,8 +176,16 @@ module.exports = {
         else {
             var query = "insert into users (channel, user_id,addr, dat) VALUES ('"+address.channelId+"', '"+address.user.id+"',N'"+JSON.stringify(address)+"',GETDATE())";
         }
-        console.log(query);
         db.executeQueryData(query);
+    },
+    user_addres: async function(){
+        var query = "select addr from users";
+        var result = await db.executeQueryData(query);
+        var mas=[];
+        for(var i in result) {
+            mas.push(result[i].addr);
+        }
+        return mas;
     },
     data_to_html: function(data){
         var header_dat=[];
