@@ -175,7 +175,7 @@ module.exports = {
             var query = "update users set dat=GETDATE() where id='"+result[0].id+"'";
         }
         else {
-            var query = "insert into users (channel, user_id,addr, dat) VALUES ('"+address.channelId+"', N'"+address.user.id+"','"+JSON.stringify(address)+"',GETDATE())";
+            var query = "insert into users (channel, user_id,addr, dat) VALUES ('"+address.channelId+"', '"+address.user.id+"',N'"+JSON.stringify(address)+"',GETDATE())";
         }
         console.log(query);
         db.executeQueryData(query);
