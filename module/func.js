@@ -129,6 +129,7 @@ module.exports = {
                         //]);
                         var msg = new builder.Message(session).addAttachment(card);
                         resolve(msg);
+
                     }        
             });	
         })
