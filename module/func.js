@@ -300,13 +300,11 @@ module.exports = {
                 var result = await db.executeQueryData(query);
 
                 if (result.length>0) {
-                    var msg = 'Динамика ВСП '+text+': \n [Дата | Количество оценок | CSI] \n'
-                    //session.send('Динамика ВСП '+text+': \n [Дата | Количество оценок | CSI] ');
+                    session.send('Динамика ВСП '+text+':');
+                    session.send('[Дата | Количество оценок | CSI] ');
                     for (let i in result) {
-                        msg = msg+result[i].dat+'  |  '+result[i].kolvo+'  |  '+result[i].sr+' \n';
-                        //session.send(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
+                        session.send(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                     }
-                    session.send(msg);
                 }
             }
             else {
