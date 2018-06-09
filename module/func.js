@@ -197,8 +197,7 @@ module.exports = {
         }
         header_dat=header_dat.reverse();
         var kol_dat = header_dat.length;
-        console.log(header_dat);
-        console.log(gosb);
+
         var html = '<table><thead><tr><th rowspan="2">Место</th><th rowspan="2">ГОСБ</th>';
 
         for (var i in header_dat) {
@@ -256,5 +255,64 @@ module.exports = {
         dynamic = dynamic.toFixed(3);
         if(dynamic<0) clas="red";
         return '<span class="'+clas+'">'+dynamic+'</span>';
+    },
+    tipZapros: function(text){
+        var mas_gosb = [17,8604,8605,8606,8607,8608,8609,8639,8640,9040];
+        var text = text.trim();
+        var tip = 'fio';
+        var mas = text.split(/[\s|,_\-!#/]+/);
+        var gosb = parseInt(mas[0]);
+
+        if (mas_gosb.indexOf(gosb) != -1) {
+            tip = 'vsp';
+            text = gosb+'/0'+parseInt(mas[1])
+        }
+
+        var res = {
+            type: tip,
+            text: text
+        }
+        return res;
+    },
+    findVSP: async function(text,session){
+            var query = "SELECT "+ 
+                    "ROUND(AVG ([Оценка1]),3) as sr, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[VSP] "+
+                    "where [Date_create]=(select max([Date_create]) from [dbo].[VSP]) "+
+                    "and [ВСП2]='"+text+"'"+
+                    "group by [ВСП2],date_create ";
+            var result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                session.send('CSI для ВСП '+text+' на '+result[0].dat+': '+result[0].sr);
+
+                var query = "SELECT "+ 
+                        "[ВСП2] as gosb, "+
+                        "Format([Date_create], 'dd.MM.yyyy') as dat, "+
+                        "count([Оценка1]) as kolvo, "+
+                        "ROUND(AVG ([Оценка1]),3) as sr "+
+                    "FROM [dbo].[VSP] "+
+                        "where [Date_create] in (select top 3 [Date_create] from [dbo].[VSP] group by [Date_create] order by [Date_create] desc) "+
+                        "and [ВСП2]='"+text+"' "+
+                        "group by [ВСП2],[Date_create] "+
+                        "order by [Date_create]";
+                var result = await db.executeQueryData(query);
+
+                if (result.length>0) {
+                    var msg = 'Динамика ВСП '+text+': \n [Дата | Количество оценок | CSI] \n'
+                    //session.send('Динамика ВСП '+text+': \n [Дата | Количество оценок | CSI] ');
+                    for (let i in result) {
+                        msg = msg+result[i].dat+'  |  '+result[i].kolvo+'  |  '+result[i].sr+' \n';
+                        //session.send(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
+                    }
+                    session.send(msg);
+                }
+            }
+            else {
+                session.send('Нет информации для ВСП '+text);
+            }
+
+        //return result;
     }
 }

@@ -56,24 +56,17 @@ var bot = new builder.UniversalBot(connector, [
                 sendProactiveMessage(address,'CSI обновился!');
             }
         }
-        /*savedAddress = { 
-          id: '7GFNVv1ArAQ',
-          channelId: 'telegram',
-          user: [Object],
-          conversation: [Object],
-          bot: [Object],
-          serviceUrl: 'https://telegram.botframework.com' 
-        };
 
-        savedAddress = session.message.address;
-        setTimeout(() => {
-            sendProactiveMessage(savedAddress);
-        }, 5000);
-        */
+        var zap = func.tipZapros(session.message.text);
 
-        //JSON.stringify(result)
+        if (zap.type=='vsp') {
+            var result = await func.findVSP(zap.text,session);
+        }
 
-        var card = new builder.HeroCard(session)
+        //session.send(JSON.stringify(result));
+
+
+/*        var card = new builder.HeroCard(session)
 .title('BotFramework Hero Card')
 .subtitle('Your bots — wherever your users are talking')
 .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
@@ -87,7 +80,7 @@ var msg = new builder.Message(session).addAttachment(card);
 session.send(msg);
 
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
-        session.beginDialog("main");
+        session.beginDialog("main");*/
     }
 ]).set('storage', inMemoryStorage); // Register in memory storage
 
