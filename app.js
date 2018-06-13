@@ -58,7 +58,7 @@ var bot = new builder.UniversalBot(connector, [
         }
 
         var zap = func.tipZapros(session.message.text);
-
+        session.sendTyping();
         session.dialogData.zap = zap;
 
         if (zap.type=='vsp') {
@@ -69,33 +69,33 @@ var bot = new builder.UniversalBot(connector, [
             if (typeof result['vsp'] !== "undefined") {
                 session.send('CSI для ВСП '+zap.text+' (канал ВСП) на '+result.vsp.dat+': '+result.vsp.sr);
                 vspLabels.push('ВСП');
-                if (kolvo==1) {
+                /*if (kolvo==1) {
                     builder.Prompts.choice(session, "Подробная информация:", ['Смотреть'],
                     {
                         listStyle: 3
                     });
-                }
+                }*/
 
             }
             if (typeof result['premier'] !== "undefined") {
                 session.send('CSI для ВСП '+zap.text+' (канал Премьер) на '+result.premier.dat+': '+result.premier.sr);
                 vspLabels.push('Премьер');
-                if (kolvo==1) {
+                /*if (kolvo==1) {
                     builder.Prompts.choice(session, "Подробная информация:", ['Смотреть'],
                     {
                         listStyle: 3
                     });
-                }
+                }*/
             }
-            if (kolvo>1) {
+            // (kolvo>1) {
                 builder.Prompts.choice(session, "Подробная информация о канале:", vspLabels,
                 {
                     listStyle: 3
                 });
-            }
+            //}
         }
 
-        session.send(JSON.stringify(result)+' '+JSON.stringify(result).match(/"sr":/g).length);
+        //session.send(JSON.stringify(result)+' '+JSON.stringify(result).match(/"sr":/g).length);
 
 
 /*        var card = new builder.HeroCard(session)
@@ -116,8 +116,8 @@ session.send(msg);
     },
     async function (session, results){
         if (results.response) {
+            session.sendTyping();
             var result = await func.moreData(session.dialogData.zap,results.response.entity);
-            session.send('Оценки меньше 10: ')
             //session.send(JSON.stringify(result)+' '+results.response.entity)
             for (let i in result) {
                 session.send(result[i])
