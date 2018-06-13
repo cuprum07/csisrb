@@ -4,6 +4,8 @@ var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
 var db = require('./module/db')
 var func = require('./module/func');
+var fs = require('fs');
+var util = require('util');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -40,6 +42,7 @@ server.post('/api/messages', connector.listen());
 });*/
 
 var inMemoryStorage = new builder.MemoryBotStorage();
+var fioLabels = {};
 
 var bot = new builder.UniversalBot(connector, [
     async function(session){
@@ -55,6 +58,19 @@ var bot = new builder.UniversalBot(connector, [
                 console.log(address);
                 sendProactiveMessage(address,'CSI обновился!');
             }
+        }
+
+        if ((session.message.text=='сивакова')||(session.message.text=='Сивакова')){
+            fs.readFile('img/smile.gif', function (err, data) {
+                var base64 = Buffer.from(data).toString('base64');
+                var contentType = 'image/gif';
+                var msg = new builder.Message(session)
+                    .addAttachment({
+                        contentUrl: util.format('data:%s;base64,%s', contentType, base64),
+                        contentType: contentType
+                    });
+                session.send(msg);  
+            });
         }
 
         var zap = func.tipZapros(session.message.text);
@@ -94,7 +110,28 @@ var bot = new builder.UniversalBot(connector, [
                 });
             //}
         }
-
+        if (zap.type=='fio') {
+            var result = await func.findFio(zap.text);
+            console.log('res '+JSON.stringify(result)+' '+Object.keys(result).length)
+            //var kolvo = JSON.stringify(result).match(/"type":/g).length;
+            var kolvo = Object.keys(result).length;
+            if (kolvo==0) {
+                session.send('По вашему запросу ничего не смог найти :(');
+            }
+            if (kolvo==1) {
+                session.send('1');
+            }
+            if (kolvo>1) {
+                fioLabels = result;
+                builder.Prompts.choice(session, "Уточните запрос:", fioLabels,
+                {
+                    listStyle: 3
+                });
+            }
+            //session.send(JSON.stringify(result));
+        }  
+        
+        
         //session.send(JSON.stringify(result)+' '+JSON.stringify(result).match(/"sr":/g).length);
 
 
@@ -117,6 +154,13 @@ session.send(msg);
     async function (session, results){
         if (results.response) {
             session.sendTyping();
+
+            var zap = fioLabels[results.response.entity];
+
+            if (typeof fioLabels[results.response.entity]!=='undefined') {
+
+            }
+
             var result = await func.moreData(session.dialogData.zap,results.response.entity);
             //session.send(JSON.stringify(result)+' '+results.response.entity)
             for (let i in result) {

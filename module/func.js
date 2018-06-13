@@ -312,6 +312,54 @@ module.exports = {
 
         //return result;
     },
+    findFio: async function(text){
+        var mas = {};
+            var query = "SELECT "+ 
+                    "ROUND(AVG ([Оценка1]),3) as sr, "+
+                    "[Сотрудник] as sotr,"+
+                    "[ВСП2] as vsp, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[VSP] "+
+                    "where [Date_create]=(select max([Date_create]) from [dbo].[VSP]) "+
+                    "and [Сотрудник] LIKE N'%"+text+"%'"+
+                    "group by [Сотрудник],[ВСП2],date_create ";
+            console.log(query);
+            var result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                for (let i in result) {
+                    mas['ВСП: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                        text: result[i].sotr,
+                        vsp: result[i].vsp,
+                        type: 'vsp'
+                    }
+                }
+            }
+
+            query = "SELECT "+ 
+                    "ROUND(AVG ([Оценка_1]),3) as sr, "+
+                    "[ФИО_СМ] as sotr,"+
+                    "[ВСП] as vsp, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[SM] "+
+                    "where [Date_create]=(select max([date_create]) from [dbo].[SM]) "+
+                    "and [ФИО_СМ] LIKE N'%"+text+"%'"+
+                    "group by [ФИО_СМ],[ВСП],date_create ";
+            console.log(query);
+            result = await db.executeQueryData(query);
+            console.log('lenght '+result.length);
+            if (result.length>0) {
+                for (let i in result) {
+                    mas['СМ: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                        text: result[i].sotr,
+                        vsp: result[i].vsp,
+                        type: 'sm'
+                    }
+                }
+            }            
+
+        return mas;
+    },
     moreData: async function(zap,channel){
         var query='';
         var result = [];
