@@ -119,7 +119,22 @@ var bot = new builder.UniversalBot(connector, [
                 session.send('По вашему запросу ничего не смог найти :(');
             }
             if (kolvo==1) {
-                session.send('1');
+
+                var keys = Object.keys(result);
+                console.log(JSON.stringify(keys));
+                var zap = result[keys[0]];
+                var channel = zap.channel;
+
+                console.log(JSON.stringify(zap)+' '+channel);
+
+                result = await func.moreData(zap,channel);
+                
+                //session.send(JSON.stringify(result)+' '+results.response.entity)
+                for (let i in result) {
+                    session.send(result[i])
+                }
+                
+
             }
             if (kolvo>1) {
                 fioLabels = result;
@@ -155,13 +170,15 @@ session.send(msg);
         if (results.response) {
             session.sendTyping();
 
-            var zap = fioLabels[results.response.entity];
+            var channel = results.response.entity;
+            var zap = session.dialogData.zap;
 
             if (typeof fioLabels[results.response.entity]!=='undefined') {
-
+                var zap = fioLabels[results.response.entity];
+                channel = zap.channel;
             }
 
-            var result = await func.moreData(session.dialogData.zap,results.response.entity);
+            var result = await func.moreData(zap,channel);
             //session.send(JSON.stringify(result)+' '+results.response.entity)
             for (let i in result) {
                 session.send(result[i])
