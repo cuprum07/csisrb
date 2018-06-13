@@ -334,21 +334,32 @@ module.exports = {
         var query='';
         var result = [];
         var msg_mas = [];
+        var msg = '';
         if ((zap.type=='vsp')&&(channel=='ВСП')){
             query = "SELECT "+ 
             "[Оценка1] as sr, "+
             "[Сотрудник] as fio, "+
             "[Продукт] as product, "+
-            "[Уровень1] as otklon "+
+            "[Комментарий] as comment, "+
+            "[Уровень1] as ur1, "+
+            "[Уровень2] as ur2, "+
+            "[Уровень3] as ur3, "+
+            "[Уровень4] as ur4 "+
         "FROM [dbo].[VSP] "+
             "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
             "and [ВСП2]='"+zap.text+"' "+
-            "and [Оценка1]<10"+
-            "order by [Оценка1]";
+            "and [Оценка1]<10 "+
+            "order by [Оценка1] ";
             console.log(query);
             result = await db.executeQueryData(query);
             for (i in result) {
-                msg_mas.push(result[i].sr+' '+result[i].fio+' '+result[i].product+' '+result[i].otklon);
+                msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
+                if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
+                if ((result[i].ur1!==null)&&(result[i].ur1!='')) msg = msg+', '+result[i].ur1;
+                if ((result[i].ur2!==null)&&(result[i].ur2!='')) msg = msg+', '+result[i].ur2;
+                if ((result[i].ur3!==null)&&(result[i].ur3!='')) msg = msg+', '+result[i].ur3;
+                if ((result[i].ur4!==null)&&(result[i].ur4!='')) msg = msg+', '+result[i].ur4;
+                msg_mas.push(msg);
             }
         }
         return msg_mas;

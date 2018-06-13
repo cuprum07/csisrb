@@ -117,6 +117,7 @@ session.send(msg);
     async function (session, results){
         if (results.response) {
             var result = await func.moreData(session.dialogData.zap,results.response.entity);
+            session.send('Оценки меньше 10: ')
             //session.send(JSON.stringify(result)+' '+results.response.entity)
             for (let i in result) {
                 session.send(result[i])
