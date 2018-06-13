@@ -59,11 +59,43 @@ var bot = new builder.UniversalBot(connector, [
 
         var zap = func.tipZapros(session.message.text);
 
+        session.dialogData.zap = zap;
+
         if (zap.type=='vsp') {
+            
+            var vspLabels = [];
             var result = await func.findVSP(zap.text,session);
+            var kolvo = JSON.stringify(result).match(/"sr":/g).length;
+            if (typeof result['vsp'] !== "undefined") {
+                session.send('CSI для ВСП '+zap.text+' (канал ВСП) на '+result.vsp.dat+': '+result.vsp.sr);
+                vspLabels.push('ВСП');
+                if (kolvo==1) {
+                    builder.Prompts.choice(session, "Подробная информация:", ['Смотреть'],
+                    {
+                        listStyle: 3
+                    });
+                }
+
+            }
+            if (typeof result['premier'] !== "undefined") {
+                session.send('CSI для ВСП '+zap.text+' (канал Премьер) на '+result.premier.dat+': '+result.premier.sr);
+                vspLabels.push('Премьер');
+                if (kolvo==1) {
+                    builder.Prompts.choice(session, "Подробная информация:", ['Смотреть'],
+                    {
+                        listStyle: 3
+                    });
+                }
+            }
+            if (kolvo>1) {
+                builder.Prompts.choice(session, "Подробная информация о канале:", vspLabels,
+                {
+                    listStyle: 3
+                });
+            }
         }
 
-        //session.send(JSON.stringify(result));
+        session.send(JSON.stringify(result)+' '+JSON.stringify(result).match(/"sr":/g).length);
 
 
 /*        var card = new builder.HeroCard(session)
@@ -81,7 +113,17 @@ session.send(msg);
 
         session.send("Приветствую вас! Я CSI бот Среднерусского банка.");
         session.beginDialog("main");*/
+    },
+    async function (session, results){
+        if (results.response) {
+            var result = await func.moreData(session.dialogData.zap,results.response.entity);
+            //session.send(JSON.stringify(result)+' '+results.response.entity)
+            for (let i in result) {
+                session.send(result[i])
+            }
+        }    
     }
+
 ]).set('storage', inMemoryStorage); // Register in memory storage
 
 bot.dialog('main', require('./module/main'));

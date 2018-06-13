@@ -275,6 +275,7 @@ module.exports = {
         return res;
     },
     findVSP: async function(text,session){
+        var mas = {};
             var query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
@@ -282,10 +283,12 @@ module.exports = {
                     "where [Date_create]=(select max([Date_create]) from [dbo].[VSP]) "+
                     "and [ВСП2]='"+text+"'"+
                     "group by [ВСП2],date_create ";
+            console.log(query);
             var result = await db.executeQueryData(query);
 
             if (result.length>0) {
-                session.send('CSI для ВСП '+text+' на '+result[0].dat+': '+result[0].sr);
+                mas['vsp'] = result[0];
+                /*session.send('CSI для ВСП '+text+' на '+result[0].dat+': '+result[0].sr);
 
                 var query = "SELECT "+ 
                         "[ВСП2] as gosb, "+
@@ -305,12 +308,49 @@ module.exports = {
                     for (let i in result) {
                         session.send(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                     }
-                }
-            }
-            else {
-                session.send('Нет информации для ВСП '+text);
+                }*/
             }
 
+            query = "SELECT "+ 
+                    "ROUND(AVG ([CRM_NPS_REPLY1]),3) as sr, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[Premier] "+
+                    "where [date_create]=(select max([date_create]) from [dbo].[Premier]) "+
+                    "and [ВСП]='"+text+"'"+
+                    "group by [ВСП],date_create ";
+            console.log(query);
+            result = await db.executeQueryData(query);
+
+            
+
+            if (result.length>0) {
+                mas['premier'] = result[0];
+            }    
+            return mas;
+
         //return result;
+    },
+    moreData: async function(zap,channel){
+        var query='';
+        var result = [];
+        var msg_mas = [];
+        if ((zap.type=='vsp')&&(channel=='ВСП')){
+            query = "SELECT "+ 
+            "[Оценка1] as sr, "+
+            "[Сотрудник] as fio, "+
+            "[Продукт] as product, "+
+            "[Уровень1] as otklon "+
+        "FROM [dbo].[VSP] "+
+            "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
+            "and [ВСП2]='"+zap.text+"' "+
+            "and [Оценка1]<10"+
+            "order by [Оценка1]";
+            console.log(query);
+            result = await db.executeQueryData(query);
+            for (i in result) {
+                msg_mas.push(result[i].sr+' '+result[i].fio+' '+result[i].product+' '+result[i].otklon);
+            }
+        }
+        return msg_mas;
     }
 }
