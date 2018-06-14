@@ -582,9 +582,9 @@ module.exports = {
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
-                if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 if ((result[i].ur1!==null)&&(result[i].ur1!=='')) msg = msg+', '+result[i].ur1;
                 if ((result[i].ur2!==null)&&(result[i].ur2!=='')) msg = msg+', '+result[i].ur2;
+                if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 msg_mas.push(msg);
             }
         }  
@@ -666,7 +666,9 @@ module.exports = {
             "[Сотрудник] as fio, "+
             "[ВСП2] as vsp, "+
             "[Продукт] as product, "+
-            "[Комментарий] as comment "+
+            "[Комментарий] as comment, "+
+            "[Уровень1] as ur1, "+
+            "[Уровень2] as ur2 "+
         "FROM [dbo].[VSP] "+
             "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
             "and [ГОСБ3]=N'"+zap.vsp+"' "+
@@ -679,6 +681,8 @@ module.exports = {
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].vsp+', '+result[i].fio+', '+result[i].product+'';
+                if ((result[i].ur1!==null)&&(result[i].ur1!=='')) msg = msg+', '+result[i].ur1;
+                if ((result[i].ur2!==null)&&(result[i].ur2!=='')) msg = msg+', '+result[i].ur2;
                 if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 msg_mas.push(msg);
             }
@@ -712,8 +716,10 @@ module.exports = {
             query = "SELECT "+ 
             "[Оценка] as sr, "+
             "[Логин_сотрудника] as fio, "+
-            "[Продукт] as product, "+
-            "[Текст_СМС] as comment "+
+            "[Q2 текст] as comment, "+
+            "[Событие] as trig, "+
+            "[Уровень 1] as ur1, "+
+            "[Уровень 2] as ur2 "+
         "FROM [dbo].[DSA] "+
             "where [date_create]=(select max([date_create]) from [dbo].[DSA]) "+
             "and [ГОСБ]=N'"+zap.vsp+"' "+
@@ -725,7 +731,9 @@ module.exports = {
             msg_mas.push('Оценки меньше 7: ');
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
-                msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
+                msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].trig+'';
+                if ((result[i].ur1!==null)&&(result[i].ur1!=='')) msg = msg+', '+result[i].ur1;
+                if ((result[i].ur2!==null)&&(result[i].ur2!=='')) msg = msg+', '+result[i].ur2;
                 if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 msg_mas.push(msg);
             }
@@ -759,8 +767,10 @@ module.exports = {
             query = "SELECT "+ 
             "[Оценка] as sr, "+
             "[Логин_сотрудника] as fio, "+
-            "[Продукт] as product, "+
-            "[Текст_СМС] as comment "+
+            "[Q2 текст] as comment, "+
+            "[Событие] as trig, "+
+            "[Уровень 1] as ur1, "+
+            "[Уровень 2] as ur2 "+
         "FROM [dbo].[DSA] "+
             "where [date_create]=(select max([date_create]) from [dbo].[DSA]) "+
             "and [ГОСБ]=N'"+zap.vsp+"' "+
@@ -772,7 +782,9 @@ module.exports = {
             msg_mas.push('Оценки меньше 7: ');
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
-                msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
+                msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].trig+'';
+                if ((result[i].ur1!==null)&&(result[i].ur1!=='')) msg = msg+', '+result[i].ur1;
+                if ((result[i].ur2!==null)&&(result[i].ur2!=='')) msg = msg+', '+result[i].ur2;
                 if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 msg_mas.push(msg);
             }
