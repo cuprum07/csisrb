@@ -279,7 +279,7 @@ module.exports = {
         return res;
     },
     smallButton: function(text){
-        return text.substring(0,63);
+        return text.substring(0,30);
     },
     initialy: function(text){
         var arr = text.split(" ");
