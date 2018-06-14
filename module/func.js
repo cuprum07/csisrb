@@ -332,8 +332,16 @@ module.exports = {
             var result = await db.executeQueryData(query);
 
             if (result.length>0) {
-                for (let i in result) {
+                /*for (let i in result) {
                     mas['ВСП: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                        text: result[i].sotr,
+                        vsp: result[i].vsp,
+                        channel: 'vsp',
+                        type: 'fio'
+                    }
+                }*/
+                for (let i in result) {
+                    mas['ВСП: '+result[i].vsp+', CSI - '+result[i].sr] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'vsp',
