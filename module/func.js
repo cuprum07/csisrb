@@ -280,6 +280,7 @@ module.exports = {
     },
     findVSP: async function(text,session){
         var mas = {};
+        var result = [];
             var query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
@@ -288,7 +289,7 @@ module.exports = {
                     "and [ВСП2]='"+text+"'"+
                     "group by [ВСП2],date_create ";
             console.log(query);
-            var result = await db.executeQueryData(query);
+            result = await db.executeQueryData(query);
 
             if (result.length>0) {
                 mas['vsp'] = result[0];

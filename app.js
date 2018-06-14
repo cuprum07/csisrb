@@ -81,7 +81,7 @@ var bot = new builder.UniversalBot(connector, [
             
             var vspLabels = [];
             var result = await func.findVSP(zap.text,session);
-            var kolvo = JSON.stringify(result).match(/"sr":/g).length;
+            var kolvo = Object.keys(result).length;
             if (typeof result['vsp'] !== "undefined") {
                 session.send('CSI для ВСП '+zap.text+' (канал ВСП) на '+result.vsp.dat+': '+result.vsp.sr);
                 vspLabels.push('ВСП');
@@ -103,12 +103,15 @@ var bot = new builder.UniversalBot(connector, [
                     });
                 }*/
             }
-            // (kolvo>1) {
+            if  (kolvo>0) {
                 builder.Prompts.choice(session, "Подробная информация о канале:", vspLabels,
                 {
                     listStyle: 3
                 });
-            //}
+            }
+            else {
+                session.send('Я приложил все усилия, но информации по данному ВСП не нашел :( Попробуйте другое.');
+            }
         }
         if (zap.type=='fio') {
             var result = await func.findFio(zap.text);
