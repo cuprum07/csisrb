@@ -114,7 +114,7 @@ var bot = new builder.UniversalBot(connector, [
             }
         }
         if (zap.type=='fio') {
-            var result = await func.findFio(zap.text);
+            var result = await func.findFio(zap.text,session);
             console.log('res '+JSON.stringify(result)+' '+Object.keys(result).length)
             //var kolvo = JSON.stringify(result).match(/"type":/g).length;
             var kolvo = Object.keys(result).length;
