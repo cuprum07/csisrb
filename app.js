@@ -143,7 +143,7 @@ var bot = new builder.UniversalBot(connector, [
                 fioLabels = result;
                 builder.Prompts.choice(session, "Уточните запрос:", fioLabels,
                 {
-                    listStyle: 3
+                    listStyle: builder.ListStyle.auto
                 });
             }
             //session.send(JSON.stringify(result));
