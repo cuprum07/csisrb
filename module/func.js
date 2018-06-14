@@ -278,6 +278,21 @@ module.exports = {
         }
         return res;
     },
+    smallButton: function(text){
+        return text.substring(0,63);
+    },
+    initialy: function(text){
+        var arr = text.split(" ");
+        var answer = arr[0];
+        for (var i = 1; i < arr.length; i++)
+        {
+            console.log(i+' '+arr[i]);
+            answer+=" ";
+            answer+=arr[i].substring(0,1);
+            answer+=".";
+        }
+        return answer;
+    },
     findVSP: async function(text,session){
         var mas = {};
         var result = [];
@@ -319,6 +334,7 @@ module.exports = {
     },
     findFio: async function(text){
         var mas = {};
+        var key = '';
             var query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
                     "UPPER(REPLACE([Сотрудник], '  ', ' ')) as sotr,"+
@@ -332,16 +348,9 @@ module.exports = {
             var result = await db.executeQueryData(query);
 
             if (result.length>0) {
-                /*for (let i in result) {
-                    mas['ВСП: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
-                        text: result[i].sotr,
-                        vsp: result[i].vsp,
-                        channel: 'vsp',
-                        type: 'fio'
-                    }
-                }*/
                 for (let i in result) {
-                    mas['ВСП: '+result[i].vsp+', CSI - '+result[i].sr] = {
+                    key = this.smallButton('ВСП: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr);
+                    mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'vsp',
@@ -364,7 +373,8 @@ module.exports = {
 
             if (result.length>0) {
                 for (let i in result) {
-                    mas['РГВСП: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                    key = this.smallButton('РГВСП: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr);
+                    mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'rgvsp',
@@ -387,7 +397,8 @@ module.exports = {
             console.log('lenght '+result.length);
             if (result.length>0) {
                 for (let i in result) {
-                    mas['СМ: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                    key = this.smallButton('СМ: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr);
+                    mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'sm',
@@ -410,7 +421,8 @@ module.exports = {
             console.log('lenght '+result.length);
             if (result.length>0) {
                 for (let i in result) {
-                    mas['DSA: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                    key = this.smallButton('DSA: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr);
+                    mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'dsa',
@@ -433,7 +445,8 @@ module.exports = {
             console.log('lenght '+result.length);
             if (result.length>0) {
                 for (let i in result) {
-                    mas['РГСПП DSA: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                    key = this.smallButton('РГСПП DSA: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr);
+                    mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
                         channel: 'rgdsa',
