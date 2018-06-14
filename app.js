@@ -141,9 +141,13 @@ var bot = new builder.UniversalBot(connector, [
             }
             if (kolvo>1) {
                 fioLabels = result;
-                builder.Prompts.choice(session, "Уточните запрос:", fioLabels,
+                var labelMas = [];
+                for (var key in fioLabels) {
+                    labelMas.push(key);
+                }
+                builder.Prompts.choice(session, "Уточните запрос:", labelMas,
                 {
-                    listStyle: builder.ListStyle.auto
+                    listStyle: 3
                 });
             }
             //session.send(JSON.stringify(result));
