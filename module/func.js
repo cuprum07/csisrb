@@ -258,7 +258,11 @@ module.exports = {
     },
     tipZapros: function(text){
         var mas_gosb = [17,8604,8605,8606,8607,8608,8609,8639,8640,9040];
+        //console.log('start '+text);
         var text = text.trim();
+        text = text.replace(/  /g, ' ');
+        text = text.replace(/ё/g, 'е');
+        //console.log('enddd '+text);
         var tip = 'fio';
         var mas = text.split(/[\s|,_\-!#/]+/);
         var gosb = parseInt(mas[0]);
@@ -316,13 +320,13 @@ module.exports = {
         var mas = {};
             var query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
-                    "[Сотрудник] as sotr,"+
+                    "UPPER(REPLACE([Сотрудник], '  ', ' ')) as sotr,"+
                     "[ВСП2] as vsp, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[VSP] "+
                     "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
                     "and [Сотрудник] LIKE N'%"+text+"%'"+
-                    "group by [Сотрудник],[ВСП2],date_create ";
+                    "group by UPPER(REPLACE([Сотрудник], '  ', ' ')), [ВСП2], date_create ";
             console.log(query);
             var result = await db.executeQueryData(query);
 
@@ -338,14 +342,37 @@ module.exports = {
             }
 
             query = "SELECT "+ 
+                    "ROUND(AVG ([Оценка1]),3) as sr, "+
+                    "UPPER(REPLACE([РГВСП], '  ', ' ')) as sotr,"+
+                    "[ГОСБ3] as vsp, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[VSP] "+
+                    "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
+                    "and [РГВСП] LIKE N'%"+text+"%'"+
+                    "group by UPPER(REPLACE([РГВСП], '  ', ' ')), [ГОСБ3], date_create ";
+            console.log(query);
+            result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                for (let i in result) {
+                    mas['РГВСП: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr] = {
+                        text: result[i].sotr,
+                        vsp: result[i].vsp,
+                        channel: 'rgvsp',
+                        type: 'fio'
+                    }
+                }
+            }
+
+            query = "SELECT "+ 
                     "ROUND(AVG ([Оценка_1]),3) as sr, "+
-                    "[ФИО_СМ] as sotr,"+
+                    "UPPER(REPLACE([ФИО_СМ], '  ', ' ')) as sotr,"+
                     "[ВСП] as vsp, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[SM] "+
                     "where [Date_create]=(select max([date_create]) from [dbo].[SM]) "+
                     "and [ФИО_СМ] LIKE N'%"+text+"%'"+
-                    "group by [ФИО_СМ],[ВСП],date_create ";
+                    "group by UPPER(REPLACE([ФИО_СМ], '  ', ' ')),[ВСП],date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
             console.log('lenght '+result.length);
@@ -469,11 +496,7 @@ module.exports = {
             "[Оценка1] as sr, "+
             "[Сотрудник] as fio, "+
             "[Продукт] as product, "+
-            "[Комментарий] as comment, "+
-            "[Уровень1] as ur1, "+
-            "[Уровень2] as ur2, "+
-            "[Уровень3] as ur3, "+
-            "[Уровень4] as ur4 "+
+            "[Комментарий] as comment "+
         "FROM [dbo].[VSP] "+
             "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
             "and [ВСП2]='"+zap.vsp+"' "+
@@ -537,6 +560,54 @@ module.exports = {
                 msg_mas.push(msg);
             }
         }  
+
+        if ((zap.type=='fio')&&(channel=='rgvsp')){
+
+            query = "SELECT "+ 
+            "Format([date_create], 'dd.MM.yyyy') as dat, "+
+            "count([Оценка1]) as kolvo, "+
+            "ROUND(AVG ([Оценка1]),3) as sr "+
+        "FROM [dbo].[VSP] "+
+            "where [date_create] in (select top 3 [date_create] from [dbo].[VSP] group by [date_create] order by [date_create] desc) "+
+            "and [ГОСБ3]=N'"+zap.vsp+"' "+
+            "and [РГВСП] like N'"+zap.text+"%' "+
+            "group by [date_create] "+
+            "order by [date_create]";
+
+            console.log(query);
+
+            result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                msg_mas.push('Динамика');
+                msg_mas.push('[Дата | Количество оценок | CSI] ');
+                for (let i in result) {
+                    msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
+                }
+            }
+
+            query = "SELECT "+ 
+            "[Оценка1] as sr, "+
+            "[Сотрудник] as fio, "+
+            "[ВСП2] as vsp, "+
+            "[Продукт] as product, "+
+            "[Комментарий] as comment "+
+        "FROM [dbo].[VSP] "+
+            "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
+            "and [ГОСБ3]=N'"+zap.vsp+"' "+
+            "and [РГВСП]=N'"+zap.text+"' "+
+            "and [Оценка1]<10 "+
+            "order by [Оценка1] ";
+            console.log(query);
+            result = await db.executeQueryData(query);
+            msg_mas.push('Оценки меньше 10: ');
+            if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 10!');
+            for (i in result) {
+                msg='Оценка '+result[i].sr+': '+result[i].vsp+', '+result[i].fio+', '+result[i].product+'';
+                if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
+                msg_mas.push(msg);
+            }
+        } 
 
         return msg_mas;
     }

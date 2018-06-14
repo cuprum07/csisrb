@@ -61,9 +61,9 @@ var bot = new builder.UniversalBot(connector, [
         }
 
         if ((session.message.text=='сивакова')||(session.message.text=='Сивакова')){
-            fs.readFile('img/smile.gif', function (err, data) {
+            fs.readFile('img/smile.jpg', function (err, data) {
                 var base64 = Buffer.from(data).toString('base64');
-                var contentType = 'image/gif';
+                var contentType = 'image/jpg';
                 var msg = new builder.Message(session)
                     .addAttachment({
                         contentUrl: util.format('data:%s;base64,%s', contentType, base64),
