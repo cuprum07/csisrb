@@ -296,6 +296,15 @@ module.exports = {
         }
         return answer;
     },
+    dinamicCsi: function(mas){
+        var din = 0;
+        var kol = mas.length;
+        var text = 'За последний период CSI не изменился.'
+        din = Math.round((parseFloat(mas[kol-1].sr) - parseFloat(mas[kol-2].sr))*1000)/1000;
+        if (din<0) text = 'За последний период CSI уменьшился на '+din+'. Это печально :(';
+        if (din>0) text = 'За последний период CSI увеличился на '+din+'. Великолепно! Так держать!';
+        return text;
+    },
     findVSP: async function(text,session){
         var mas = {};
         var result = [];
@@ -465,6 +474,7 @@ module.exports = {
         var result = [];
         var msg_mas = [];
         var msg = '';
+        var din=0;
         if ((zap.type=='vsp')&&((channel=='ВСП')||(channel=='Смотреть'))){
 
             query = "SELECT "+ 
@@ -486,6 +496,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
 
@@ -538,6 +549,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
 
@@ -586,6 +598,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
             query = "SELECT "+ 
@@ -637,6 +650,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
             query = "SELECT "+ 
@@ -684,6 +698,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
             query = "SELECT "+ 
@@ -736,6 +751,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
             query = "SELECT "+ 
@@ -787,6 +803,7 @@ module.exports = {
                 for (let i in result) {
                     msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
                 }
+                msg_mas.push(this.dinamicCsi(result));
             }
 
             query = "SELECT "+ 
