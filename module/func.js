@@ -303,7 +303,7 @@ module.exports = {
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[VSP] "+
-                    "where [Date_create]=(select max([Date_create]) from [dbo].[VSP]) "+
+                    "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
                     "and [ВСП2]='"+text+"'"+
                     "group by [ВСП2],date_create ";
             console.log(query);
@@ -469,11 +469,11 @@ module.exports = {
 
             query = "SELECT "+ 
             "[ВСП2] as gosb, "+
-            "Format([Date_create], 'dd.MM.yyyy') as dat, "+
+            "Format([date_create], 'dd.MM.yyyy') as dat, "+
             "count([Оценка1]) as kolvo, "+
             "ROUND(AVG ([Оценка1]),3) as sr "+
         "FROM [dbo].[VSP] "+
-            "where [Date_create] in (select top 3 [Date_create] from [dbo].[VSP] group by [Date_create] order by [Date_create] desc) "+
+            "where [date_create] in (select top 3 [date_create] from [dbo].[VSP] group by [date_create] order by [date_create] desc) "+
             "and [ВСП2]='"+zap.text+"' "+
             "group by [ВСП2],[Date_create] "+
             "order by [Date_create]";
@@ -506,6 +506,7 @@ module.exports = {
             console.log(query);
             result = await db.executeQueryData(query);
             msg_mas.push('Оценки меньше 7: ');
+            if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
                 if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
@@ -517,10 +518,33 @@ module.exports = {
             }
         }
         if ((zap.type=='vsp')&&((channel=='Премьер')||(channel=='Смотреть'))){
+
+            query = "SELECT "+ 
+            "[ВСП] as gosb, "+
+            "Format([date_create], 'dd.MM.yyyy') as dat, "+
+            "count([CRM_NPS_REPLY1]) as kolvo, "+
+            "ROUND(AVG ([CRM_NPS_REPLY1]),3) as sr "+
+        "FROM [dbo].[Premier] "+
+            "where [date_create] in (select top 3 [date_create] from [dbo].[Premier] group by [date_create] order by [date_create] desc) "+
+            "and [ВСП]='"+zap.text+"' "+
+            "group by [ВСП],[date_create] "+
+            "order by [date_create]";
+            
+            result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                msg_mas.push('Динамика ВСП '+zap.text+':');
+                msg_mas.push('[Дата | Количество оценок | CSI] ');
+                for (let i in result) {
+                    msg_mas.push(result[i].dat+' | '+result[i].kolvo+' | '+result[i].sr);
+                }
+            }
+
+
             query = "SELECT "+ 
             "[CRM_NPS_REPLY1] as sr, "+
             "[KM_LOGIN] as fio, "+
-            "[Комментт1] as comment1, "+
+            "[Коммент1] as comment1, "+
             "[Коммент2] as comment2 "+
         "FROM [dbo].[Premier] "+
             "where [Date_create]=(select max([date_create]) from [dbo].[Premier]) "+
@@ -530,6 +554,7 @@ module.exports = {
             console.log(query);
             result = await db.executeQueryData(query);
             msg_mas.push('Оценки меньше 7: ');
+            if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].fio+'';
                 if ((result[i].comment1!==null)&&(result[i].comment1!=='')) msg = msg+', '+result[i].comment1;
