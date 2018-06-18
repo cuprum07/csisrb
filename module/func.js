@@ -378,7 +378,7 @@ module.exports = {
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[VSP] "+
                     "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
-                    "and [РГВСП] LIKE N'%"+text+"%'"+
+                    "and [РГВСП] LIKE N'"+text+"%'"+
                     "group by UPPER(REPLACE([РГВСП], '  ', ' ')), [ГОСБ2], date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
