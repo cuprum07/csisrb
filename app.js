@@ -75,6 +75,13 @@ var bot = new builder.UniversalBot(connector, [
             return session.endDialog();
         }
 
+        /*if (session.message.text=='Подписаться') {
+            console.log(JSON.stringify(session.dialogData.zap));
+            session.send(JSON.stringify(session.dialogData.zap));  
+            session.send(JSON.stringify(session.dialogData.channel));
+            return session.endDialog();
+        }*/
+
 
         var zap = func.tipZapros(session.message.text);
         session.sendTyping();
@@ -130,10 +137,13 @@ var bot = new builder.UniversalBot(connector, [
 
                 var keys = Object.keys(result);
                 console.log(JSON.stringify(keys));
-                var zap = result[keys[0]];
+                zap = result[keys[0]];
                 var channel = zap.channel;
 
                 console.log(JSON.stringify(zap)+' '+channel);
+
+                //session.dialogData.zap = zap;
+                //session.dialogData.channel = channel;
 
                 result = await func.moreData(zap,channel);
                 
@@ -141,7 +151,12 @@ var bot = new builder.UniversalBot(connector, [
                 for (let i in result) {
                     session.send(result[i])
                 }
-                
+
+                /*builder.Prompts.choice(session, "Вы можете подписаться на эту информацию. При обновлении CSI будете получать эти данные.", 'Подписаться',
+                {
+                    listStyle: 3
+                });*/
+                return session.endDialog();
 
             }
             if (kolvo>1) {
