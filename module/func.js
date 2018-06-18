@@ -136,13 +136,13 @@ module.exports = {
     },
     vsp_gosb_rating: async function(){
         var query = "SELECT "+ 
-                "[ГОСБ3] as gosb, "+
+                "[ГОСБ2] as gosb, "+
                 "Format([Date_create], 'dd.MM.yyyy') as dat, "+
                 "count([Оценка1]) as kolvo, "+
                 "ROUND(AVG ([Оценка1]),3) as sr "+
             "FROM [dbo].[VSP] "+
                 "where [Date_create]=(select max([Date_create]) from [dbo].[VSP]) "+
-                "group by [ГОСБ3],[Date_create] "+
+                "group by [ГОСБ2],[Date_create] "+
                 "order by [Date_create] desc, sr desc";
         var result = await db.executeQueryData(query);
         return result;
@@ -150,14 +150,14 @@ module.exports = {
     },
     vsp_gosb_dynamic: async function(){
         var query = "SELECT "+ 
-                "[ГОСБ3] as gosb, "+
+                "[ГОСБ2] as gosb, "+
                 "Format([Date_create], 'dd.MM.yyyy') as dat, "+
                 "count([Оценка1]) as kolvo, "+
                 "ROUND(AVG ([Оценка1]),3) as sr "+
             "FROM [dbo].[VSP] "+
                 "where [Date_create] in (select top 3 [Date_create] from [dbo].[VSP] group by [Date_create] order by [Date_create] desc) "+
-                "and [ГОСБ3]!=N'НЕ ОПРЕДЕЛЕНО' "+
-                "group by [ГОСБ3],[Date_create] "+
+                "and [ГОСБ2]!=N'НЕ ОПРЕДЕЛЕНО' "+
+                "group by [ГОСБ2],[Date_create] "+
                 "order by [Date_create] desc, sr desc";
         var result = await db.executeQueryData(query);
         return result;
@@ -374,12 +374,12 @@ module.exports = {
             query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
                     "UPPER(REPLACE([РГВСП], '  ', ' ')) as sotr,"+
-                    "[ГОСБ3] as vsp, "+
+                    "[ГОСБ2] as vsp, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[VSP] "+
                     "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
                     "and [РГВСП] LIKE N'%"+text+"%'"+
-                    "group by UPPER(REPLACE([РГВСП], '  ', ' ')), [ГОСБ3], date_create ";
+                    "group by UPPER(REPLACE([РГВСП], '  ', ' ')), [ГОСБ2], date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
 
@@ -693,7 +693,7 @@ module.exports = {
             "ROUND(AVG ([Оценка1]),3) as sr "+
         "FROM [dbo].[VSP] "+
             "where [date_create] in (select top 3 [date_create] from [dbo].[VSP] group by [date_create] order by [date_create] desc) "+
-            "and [ГОСБ3]=N'"+zap.vsp+"' "+
+            "and [ГОСБ2]=N'"+zap.vsp+"' "+
             "and [РГВСП] like N'"+zap.text+"%' "+
             "group by [date_create] "+
             "order by [date_create]";
@@ -721,7 +721,7 @@ module.exports = {
             "[Уровень2] as ur2 "+
         "FROM [dbo].[VSP] "+
             "where [Date_create]=(select max([date_create]) from [dbo].[VSP]) "+
-            "and [ГОСБ3]=N'"+zap.vsp+"' "+
+            "and [ГОСБ2]=N'"+zap.vsp+"' "+
             "and [РГВСП]=N'"+zap.text+"' "+
             "and [Оценка1]<7 "+
             "order by [Оценка1] ";
