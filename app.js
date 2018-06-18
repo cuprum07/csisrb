@@ -57,6 +57,7 @@ var bot = new builder.UniversalBot(connector, [
                 var address = await func.user_addres();
                 console.log(address);
                 sendProactiveMessage(address,'CSI обновился!');
+                return session.endDialog();
             }
         }
 
@@ -71,6 +72,7 @@ var bot = new builder.UniversalBot(connector, [
                     });
                 session.send(msg);  
             });
+            return session.endDialog();
         }
 
 
@@ -112,6 +114,7 @@ var bot = new builder.UniversalBot(connector, [
             }
             else {
                 session.send('Я приложил все усилия, но информации по данному ВСП не нашел :( Попробуйте другое.');
+                return session.endDialog();
             }
         }
         if (zap.type=='fio') {
@@ -121,6 +124,7 @@ var bot = new builder.UniversalBot(connector, [
             var kolvo = Object.keys(result).length;
             if (kolvo==0) {
                 session.send('По вашему запросу ничего не смог найти :(');
+                return session.endDialog();
             }
             if (kolvo==1) {
 
@@ -191,6 +195,7 @@ session.send(msg);
             for (let i in result) {
                 session.send(result[i])
             }
+            return session.endDialog();
         }    
     }
 

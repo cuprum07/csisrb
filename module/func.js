@@ -556,6 +556,8 @@ module.exports = {
             query = "SELECT "+ 
             "[CRM_NPS_REPLY1] as sr, "+
             "[KM_LOGIN] as fio, "+
+            "[Классиф# Уровень 1] as ur1, "+
+            "[Классиф# Уровень 2] as ur2, "+
             "[Коммент1] as comment1, "+
             "[Коммент2] as comment2 "+
         "FROM [dbo].[Premier] "+
@@ -569,8 +571,10 @@ module.exports = {
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].fio+'';
+                if ((result[i].ur1!==null)&&(result[i].ur1!=='')) msg = msg+', '+result[i].ur1;
+                if ((result[i].ur2!==null)&&(result[i].ur2!=='')) msg = msg+', '+result[i].ur2;
                 if ((result[i].comment1!==null)&&(result[i].comment1!=='')) msg = msg+', '+result[i].comment1;
-                if ((result[i].comment2!==null)&&(result[i].comment2!=='')) msg = msg+', '+result[i].comment2;
+                //if ((result[i].comment2!==null)&&(result[i].comment2!=='')) msg = msg+', '+result[i].comment2;
                 msg_mas.push(msg);
             }
         }      
@@ -656,7 +660,10 @@ module.exports = {
             query = "SELECT "+ 
             "[Оценка_1] as sr, "+
             "[ФИО_СМ] as fio, "+
-            "[Продукт] as product, "+
+            "[Подпродукт] as product, "+
+            "[Тематика] as tematika, "+
+            "[Классификатор_1] as klass1, "+
+            "[Классификатор_2] as klass2, "+
             "[Суть_проблемы/недовольства_клиента] as comment "+
         "FROM [dbo].[SM] "+
             "where [date_create]=(select max([date_create]) from [dbo].[SM]) "+
@@ -670,6 +677,9 @@ module.exports = {
             if(result.length==0) msg_mas.push('Поздравляю! Нет оценок меньше 7!');
             for (i in result) {
                 msg='Оценка '+result[i].sr+': '+result[i].fio+', '+result[i].product+'';
+                if ((result[i].tematika!==null)&&(result[i].tematika!=='')) msg = msg+', '+result[i].tematika;
+                if ((result[i].klass1!==null)&&(result[i].klass1!=='')) msg = msg+', '+result[i].klass1;
+                if ((result[i].klass2!==null)&&(result[i].klass2!=='')) msg = msg+', '+result[i].klass2;
                 if ((result[i].comment!==null)&&(result[i].comment!=='')) msg = msg+', '+result[i].comment;
                 msg_mas.push(msg);
             }
