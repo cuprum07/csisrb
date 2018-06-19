@@ -347,29 +347,30 @@ module.exports = {
     findFio: async function(text,session){
         var mas = {};
         var key = '';
+
             var query = "SELECT "+ 
-                    "ROUND(AVG ([Оценка1]),3) as sr, "+
-                    "UPPER(REPLACE([Сотрудник], '  ', ' ')) as sotr,"+
-                    "[ВСП2] as vsp, "+
+                    "ROUND(AVG ([Оценка_1]),3) as sr, "+
+                    "UPPER(REPLACE([ФИО_СМ], '  ', ' ')) as sotr,"+
+                    "[ВСП] as vsp, "+
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
-                "FROM [dbo].[VSP] "+
-                    "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
-                    "and [Сотрудник] LIKE N'"+text+"%'"+
-                    "group by UPPER(REPLACE([Сотрудник], '  ', ' ')), [ВСП2], date_create ";
+                "FROM [dbo].[SM] "+
+                    "where [Date_create]=(select max([date_create]) from [dbo].[SM]) "+
+                    "and [ФИО_СМ] LIKE N'"+text+"%'"+
+                    "group by UPPER(REPLACE([ФИО_СМ], '  ', ' ')),[ВСП],date_create ";
             console.log(query);
             var result = await db.executeQueryData(query);
-
+            console.log('lenght '+result.length);
             if (result.length>0) {
                 for (let i in result) {
-                    key = this.smallButton('ВСП: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr,session);
+                    key = this.smallButton('СМ: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr,session);
                     mas[key] = {
                         text: result[i].sotr,
                         vsp: result[i].vsp,
-                        channel: 'vsp',
+                        channel: 'sm',
                         type: 'fio'
                     }
                 }
-            }
+            }  
 
             query = "SELECT "+ 
                     "ROUND(AVG ([Оценка1]),3) as sr, "+
@@ -393,31 +394,7 @@ module.exports = {
                         type: 'fio'
                     }
                 }
-            }
-
-            query = "SELECT "+ 
-                    "ROUND(AVG ([Оценка_1]),3) as sr, "+
-                    "UPPER(REPLACE([ФИО_СМ], '  ', ' ')) as sotr,"+
-                    "[ВСП] as vsp, "+
-                    "Format([date_create], 'dd.MM.yyyy') as dat "+
-                "FROM [dbo].[SM] "+
-                    "where [Date_create]=(select max([date_create]) from [dbo].[SM]) "+
-                    "and [ФИО_СМ] LIKE N'"+text+"%'"+
-                    "group by UPPER(REPLACE([ФИО_СМ], '  ', ' ')),[ВСП],date_create ";
-            console.log(query);
-            result = await db.executeQueryData(query);
-            console.log('lenght '+result.length);
-            if (result.length>0) {
-                for (let i in result) {
-                    key = this.smallButton('СМ: '+result[i].sotr+', '+result[i].vsp+', CSI - '+result[i].sr,session);
-                    mas[key] = {
-                        text: result[i].sotr,
-                        vsp: result[i].vsp,
-                        channel: 'sm',
-                        type: 'fio'
-                    }
-                }
-            }     
+            }            
             
             query = "SELECT "+ 
                     "ROUND(AVG ([Оценка]),3) as sr, "+
@@ -465,7 +442,32 @@ module.exports = {
                         type: 'fio'
                     }
                 }
-            }            
+            }      
+            
+            query = "SELECT "+ 
+                    "ROUND(AVG ([Оценка1]),3) as sr, "+
+                    "UPPER(REPLACE([Сотрудник], '  ', ' ')) as sotr,"+
+                    "[ВСП2] as vsp, "+
+                    "Format([date_create], 'dd.MM.yyyy') as dat "+
+                "FROM [dbo].[VSP] "+
+                    "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
+                    "and [Сотрудник] LIKE N'"+text+"%'"+
+                    "group by UPPER(REPLACE([Сотрудник], '  ', ' ')), [ВСП2], date_create ";
+            console.log(query);
+
+            result = await db.executeQueryData(query);
+
+            if (result.length>0) {
+                for (let i in result) {
+                    key = this.smallButton('ВСП: '+this.initialy(result[i].sotr)+', '+result[i].vsp+', CSI - '+result[i].sr,session);
+                    mas[key] = {
+                        text: result[i].sotr,
+                        vsp: result[i].vsp,
+                        channel: 'vsp',
+                        type: 'fio'
+                    }
+                }
+            }
 
         return mas;
     },
