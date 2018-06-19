@@ -300,9 +300,23 @@ module.exports = {
         var din = 0;
         var kol = mas.length;
         var text = 'За последний период CSI не изменился.'
-        din = Math.round((parseFloat(mas[kol-1].sr) - parseFloat(mas[kol-2].sr))*1000)/1000;
-        if (din<0) text = 'За последний период CSI уменьшился на '+din+'. Эх :(';
-        if (din>0) text = 'За последний период CSI увеличился на '+din+'. Отлично! Так держать!';
+        var csi_akt = parseFloat(mas[kol-1].sr);
+        din = Math.round((csi_akt - parseFloat(mas[kol-2].sr))*1000)/1000;
+        if (din<0) {
+            text = 'За последний период CSI уменьшился на '+din+'. Эх :(';
+            if ((csi_akt>=9.5)&&(csi_akt<9.6)) text = text + ' Но вы выполняете план :) Отлично!';
+            if (csi_akt>=9.6) text = text + ' Но вы перевыполняете план :) Вы великолепны! Так держать!';
+        }
+        if (din>0) {
+            text = 'За последний период CSI увеличился на '+din+'. Супер!';
+            if ((csi_akt>=9.5)&&(csi_akt<9.6)) text = text + 'Вы ещё выполняете план :) Отлично!';
+            if (csi_akt>=9.6) text = text + ' Вы ещё и перевыполняете план :) Вы великолепны! Так держать!';
+        } 
+        if (din==0) {
+            if (csi_akt<9.5) text = text + ' Вы не выполняете план, эх :( ';
+            if ((csi_akt>=9.5)&&(csi_akt<9.6)) text = text + ' Вы выполняете план :) Отлично!';
+            if (csi_akt>=9.6) text = text + ' Вы перевыполняете план :) Вы великолепны! Так держать!';
+        }
         return text;
     },
     findVSP: async function(text,session){
