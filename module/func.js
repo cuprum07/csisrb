@@ -354,7 +354,7 @@ module.exports = {
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[VSP] "+
                     "where [date_create]=(select max([date_create]) from [dbo].[VSP]) "+
-                    "and [Сотрудник] LIKE N'%"+text+"%'"+
+                    "and [Сотрудник] LIKE N'"+text+"%'"+
                     "group by UPPER(REPLACE([Сотрудник], '  ', ' ')), [ВСП2], date_create ";
             console.log(query);
             var result = await db.executeQueryData(query);
@@ -402,7 +402,7 @@ module.exports = {
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[SM] "+
                     "where [Date_create]=(select max([date_create]) from [dbo].[SM]) "+
-                    "and [ФИО_СМ] LIKE N'%"+text+"%'"+
+                    "and [ФИО_СМ] LIKE N'"+text+"%'"+
                     "group by UPPER(REPLACE([ФИО_СМ], '  ', ' ')),[ВСП],date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
@@ -426,7 +426,7 @@ module.exports = {
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[DSA] "+
                     "where [Date_create]=(select max([date_create]) from [dbo].[DSA]) "+
-                    "and [Логин_сотрудника] LIKE N'%"+text+"%'"+
+                    "and [Логин_сотрудника] LIKE N'"+text+"%'"+
                     "group by UPPER(REPLACE([Логин_сотрудника], '  ', ' ')),[ГОСБ],date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
@@ -450,7 +450,7 @@ module.exports = {
                     "Format([date_create], 'dd.MM.yyyy') as dat "+
                 "FROM [dbo].[DSA] "+
                     "where [Date_create]=(select max([date_create]) from [dbo].[DSA]) "+
-                    "and [РГСПП] LIKE N'%"+text+"%'"+
+                    "and [РГСПП] LIKE N'"+text+"%'"+
                     "group by UPPER(REPLACE([РГСПП], '  ', ' ')),[ГОСБ],date_create ";
             console.log(query);
             result = await db.executeQueryData(query);
